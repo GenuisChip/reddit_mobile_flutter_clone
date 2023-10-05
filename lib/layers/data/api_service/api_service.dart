@@ -3,7 +3,7 @@ import '../../domain/entities/query_params.dart';
 
 abstract class APIService<RESPONSE_TYPE, BODY_TYPE, CREATE_RESPONSE,
     UPDATE_RESPONSE, DELETE_RESPONSE> {
-  final apiManager = APIManager.getInstance("https://dummyjson.com/");
+  final apiManager = APIManager.getInstance("http://localhost.com/");
   final String endpoint;
   APIService({required this.endpoint});
 
