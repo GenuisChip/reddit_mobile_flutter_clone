@@ -26,6 +26,7 @@ class PostEntity extends Equatable {
     required this.comments,
     required this.videoUrl,
     required this.title,
+    required this.youVoted,
   });
 
   final num id;
@@ -35,6 +36,7 @@ class PostEntity extends Equatable {
   final String videoUrl;
   final Author author;
   final Comments comments;
+  final bool? youVoted;
 
   final String title;
 
@@ -45,6 +47,7 @@ class PostEntity extends Equatable {
         description: json["description"],
         videoUrl: json["videoUrl"],
         title: json["title"],
+        youVoted: json["youVoted"],
         author: Author.fromJson(json["author"]),
         comments: Comments.fromJson(json["comments"]),
       );
@@ -55,6 +58,7 @@ class PostEntity extends Equatable {
         "voteDownCount": voteDownCount,
         "description": description,
         "videoUrl": videoUrl,
+        "youVoted": youVoted,
         "author": author.toJson(),
         "comments": comments.toJson(),
       };

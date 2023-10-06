@@ -13,7 +13,11 @@ class PostInitial extends PostState {}
 
 class PostFetched extends PostState {
   final ApiManagerResponse<PostEntity> post;
+
+  final bool isPlaying;
   const PostFetched({
     required this.post,
+    required this.isPlaying,
   });
 }
+

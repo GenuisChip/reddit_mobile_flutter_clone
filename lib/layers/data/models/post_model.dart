@@ -26,6 +26,7 @@ class Post extends PostEntity {
     required super.comments,
     required super.videoUrl,
     required super.title,
+    required super.youVoted,
   });
 
   static List<Post> fromJsonList(json) {
@@ -39,6 +40,7 @@ class Post extends PostEntity {
       voteDownCount: data.voteDownCount,
       description: data.description,
       author: data.author,
+      youVoted: data.youVoted,
       comments: data.comments,
       videoUrl: data.videoUrl,
       title: data.title,
@@ -51,6 +53,7 @@ class Post extends PostEntity {
         voteDownCount: json["voteDownCount"],
         description: json["description"],
         videoUrl: json["videoUrl"],
+        youVoted: json["youVoted"],
         title: json["title"],
         author: Author.fromJson(json["author"]),
         comments: Comments.fromJson(json["comments"]),
@@ -64,6 +67,7 @@ class Post extends PostEntity {
         "description": description,
         "videoUrl": videoUrl,
         "title": title,
+        "youVoted": youVoted,
         "author": author.toJson(),
         "comments": comments.toJson(),
       };
