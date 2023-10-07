@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reddit/layers/presentation/cubit/post_cubit/post_comments_cubit.dart';
 import 'package:reddit/layers/presentation/cubit/post_cubit/post_cubit.dart';
 import 'package:reddit/layers/presentation/screens/post_details_screen/post_details_screen.dart';
 import 'dependencies.dart' as di;
@@ -39,9 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: ((context) => PostCubit(postsUseCase: di.sl())),
-        )
+        BlocProvider(create: (context) => PostCubit(postsUseCase: di.sl())),
+        BlocProvider(create: (context) => PostCommentsCubit()),
       ],
       child: const SafeArea(
         child: PostDetailsScreen(),

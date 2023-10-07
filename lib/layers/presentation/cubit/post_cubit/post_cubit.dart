@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:reddit/commons/handlers/debounce.dart';
 import 'package:reddit/commons/network/api_manager/api_manager.dart';
-import 'package:reddit/layers/data/models/post_model.dart';
 import 'package:reddit/layers/domain/usecases/posts_use_case.dart';
 import 'package:video_player/video_player.dart';
 
@@ -21,8 +20,10 @@ class PostCubit extends Cubit<PostState> {
     emit(PostLoading());
     final res = await postsUseCase.getOne('$id');
 
-    controller =
-        VideoPlayerController.networkUrl(Uri.parse(res.data!.videoUrl));
+    controller = VideoPlayerController.networkUrl(Uri.parse(res.data!.videoUrl))
+      ..initialize()
+      ..setLooping(true)
+      ..play();
 
     emit(PostFetched(post: res, isPlaying: true));
   }
@@ -40,7 +41,7 @@ class PostCubit extends Cubit<PostState> {
       voteDownCount: votedDown ? post.voteDownCount - 1 : post.voteDownCount,
       yourVote: votedUp ? 0 : 1,
     );
-    emit(PostVotedUp(post: newPost));
+    emit(PostVoted(post: newPost, voteType: VoteType.up));
   }
 
   void voteDown(PostEntity post) {
@@ -58,7 +59,7 @@ class PostCubit extends Cubit<PostState> {
       yourVote: votedDown ? 0 : -1,
     );
 
-    emit(PostVotedDown(post: newPost));
+    emit(PostVoted(post: newPost, voteType: VoteType.down));
   }
 
   void removeVote(PostEntity post) {
@@ -71,6 +72,6 @@ class PostCubit extends Cubit<PostState> {
       yourVote: 0,
     );
 
-    emit(PostRemoveVote(post: newPost));
+    emit(PostVoted(post: newPost, voteType: VoteType.removed));
   }
 }

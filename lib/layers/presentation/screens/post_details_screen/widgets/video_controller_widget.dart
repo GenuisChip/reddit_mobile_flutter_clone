@@ -11,7 +11,7 @@ class VideoControllerWidget extends StatefulWidget {
 
 class _VideoControllerWidgetState extends State<VideoControllerWidget> {
   bool isPlaying = true;
-  late Duration currentDuration;
+  Duration? currentDuration;
 
   @override
   void initState() {
@@ -19,9 +19,11 @@ class _VideoControllerWidgetState extends State<VideoControllerWidget> {
     widget.controller.addListener(() {
       widget.controller.value.duration;
       widget.controller.position.then((value) {
-        setState(() {
-          currentDuration = value!;
-        });
+        if (mounted) {
+          setState(() {
+            currentDuration = value!;
+          });
+        }
       });
       if (isPlaying == widget.controller.value.isPlaying) return;
       if (mounted) {
@@ -34,12 +36,12 @@ class _VideoControllerWidgetState extends State<VideoControllerWidget> {
 
   @override
   void dispose() {
-    widget.controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    currentDuration ??= const Duration();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -60,7 +62,7 @@ class _VideoControllerWidgetState extends State<VideoControllerWidget> {
           children: [
             Container(
               height: 3,
-              width: MediaQuery.of(context).size.width * .7,
+              width: MediaQuery.of(context).size.width * .6,
               color: Colors.white,
             ),
             Positioned(
@@ -69,8 +71,8 @@ class _VideoControllerWidgetState extends State<VideoControllerWidget> {
               left: 0,
               child: Container(
                 height: 10,
-                width: (MediaQuery.of(context).size.width * .7) *
-                    currentDuration.inMilliseconds /
+                width: (MediaQuery.of(context).size.width * .6) *
+                    currentDuration!.inMilliseconds /
                     widget.controller.value.duration.inMilliseconds,
                 color: Colors.red,
               ),
@@ -78,7 +80,7 @@ class _VideoControllerWidgetState extends State<VideoControllerWidget> {
           ],
         ),
         Text(
-            "${currentDuration.inMinutes < 9 ? '0${currentDuration.inMinutes}' : currentDuration.inMinutes}:${currentDuration.inSeconds < 9 ? '0${currentDuration.inSeconds}' : currentDuration.inSeconds}"),
+            "${currentDuration!.inMinutes < 9 ? '0${currentDuration!.inMinutes}' : currentDuration!.inMinutes}:${currentDuration!.inSeconds < 9 ? '0${currentDuration!.inSeconds}' : currentDuration!.inSeconds}"),
         GestureDetector(
           child: const Icon(Icons.volume_off),
         )

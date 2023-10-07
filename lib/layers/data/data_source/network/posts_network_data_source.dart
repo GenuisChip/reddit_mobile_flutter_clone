@@ -28,13 +28,12 @@ class PostsNetworkDataSource extends APIService<Post, Post, Post, Post, dynamic>
         id: 1,
         title: "MechanicalKeyboards",
         description:
-            '''The Flutter replicated view should simulate the reddit view with great attention to the visual details.
- The application should be well-structured and follow best practices in Flutter development''',
+            '''The Flutter replicated view should simulate the reddit view with great attention to the visual details.The application should be well-structured and follow best practices in Flutter development''',
         videoUrl:
             "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
         voteDownCount: 3,
         voteUpCount: 10,
-        yourVote:0,
+        yourVote: 0,
         author: Author(
           id: 1,
           name: "Ali",
@@ -42,19 +41,20 @@ class PostsNetworkDataSource extends APIService<Post, Post, Post, Post, dynamic>
         ),
         comments: Comments(
           allCommentsCount: 10,
-          data: [
-            CommentData(
-              id: 1,
-              comment: "comment comment",
+          data: List.generate(
+            30,
+            (index) => CommentData(
+              id: index + 1,
+              comment: "I'm a software engineer ${index + 1}",
               user: Author(
-                id: 1,
-                name: "Ali",
+                id: index + 1,
+                name: "Ali ${index + 1}",
                 iconUrl: "url",
               ),
-              voteDownCount: 2,
-              voteUpCount: 5,
+              voteDownCount: index + 1,
+              voteUpCount: index + 1,
             ),
-          ],
+          ),
         ),
       ),
     ));

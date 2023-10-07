@@ -13,28 +13,16 @@ class PostLoading extends PostState {}
 
 class PostInitial extends PostState {}
 
-class PostVotedUp extends PostState {
+class PostVoted extends PostState {
   final PostEntity post;
-  const PostVotedUp({
+  final VoteType voteType;
+  const PostVoted({
     required this.post,
+    required this.voteType,
   });
+  @override
+  List<Object> get props => [voteType];
 }
-class PostVotedDown extends PostState {
-  final PostEntity post;
-  const PostVotedDown({
-    required this.post,
-  });
-}
-
-class PostRemoveVote extends PostState {
-  final PostEntity post;
-  const PostRemoveVote({
-    required this.post,
-  });
-}
-
-
-
 
 class PostFetched extends PostState {
   final ApiManagerResponse<PostEntity> post;
