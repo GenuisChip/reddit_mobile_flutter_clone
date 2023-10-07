@@ -15,6 +15,7 @@ class Post extends PostEntity {
         description,
         author,
         comments,
+        identityHashCode(this)
       ];
 
   const Post({
@@ -26,7 +27,7 @@ class Post extends PostEntity {
     required super.comments,
     required super.videoUrl,
     required super.title,
-    required super.youVoted,
+    required super.yourVote,
   });
 
   static List<Post> fromJsonList(json) {
@@ -40,7 +41,7 @@ class Post extends PostEntity {
       voteDownCount: data.voteDownCount,
       description: data.description,
       author: data.author,
-      youVoted: data.youVoted,
+      yourVote: data.yourVote,
       comments: data.comments,
       videoUrl: data.videoUrl,
       title: data.title,
@@ -53,7 +54,7 @@ class Post extends PostEntity {
         voteDownCount: json["voteDownCount"],
         description: json["description"],
         videoUrl: json["videoUrl"],
-        youVoted: json["youVoted"],
+        yourVote: json["yourVote"],
         title: json["title"],
         author: Author.fromJson(json["author"]),
         comments: Comments.fromJson(json["comments"]),
@@ -67,7 +68,7 @@ class Post extends PostEntity {
         "description": description,
         "videoUrl": videoUrl,
         "title": title,
-        "youVoted": youVoted,
+        "yourVote": yourVote,
         "author": author.toJson(),
         "comments": comments.toJson(),
       };

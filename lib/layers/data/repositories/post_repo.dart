@@ -26,8 +26,7 @@ class PostsRepo implements IPostsRepo {
   }
 
   @override
-  Future<ApiManagerResponse<List<Post>>> getAll(
-      {QueryParams? params}) async {
+  Future<ApiManagerResponse<List<Post>>> getAll({QueryParams? params}) async {
     if (inMemoryCache.isNotEmpty && inMemoryCache.hasNotExpired) {
       var data = inMemoryCache.getCachedValue();
       return ApiManagerResponse(
@@ -60,8 +59,9 @@ class PostsRepo implements IPostsRepo {
 
   @override
   Future<ApiManagerResponse<Post>> getOne(String id) async {
+    var res = await networkDataSource.getOne(id);
+    return res;
     if (await networkInfo.isConnected) {
-      var res = await networkDataSource.getOne(id);
       return res;
     } else {
       return ApiManagerResponse(

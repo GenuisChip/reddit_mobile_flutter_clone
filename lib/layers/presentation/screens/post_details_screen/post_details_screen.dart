@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reddit/layers/domain/entities/post_entity.dart';
 import 'package:video_player/video_player.dart';
 import '../../cubit/post_cubit/post_cubit.dart';
+import 'widgets/video_controller_widget.dart';
+import 'widgets/vote_button_widget.dart';
 
 class PostDetailsScreen extends StatefulWidget {
   const PostDetailsScreen({Key? key}) : super(key: key);
@@ -31,18 +34,33 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state is PostFetched) {
-              final post = state.post.data!;
+            } else if (state is PostFetched ||
+                state is PostVotedUp ||
+                state is PostVotedDown ||
+                state is PostRemoveVote) {
+              late final PostEntity post;
+              if (state is PostFetched) {
+                post = state.post.data!;
+              } else if (state is PostVotedUp) {
+                post = state.post;
+              } else if (state is PostVotedDown) {
+                post = state.post;
+              } else if (state is PostRemoveVote) {
+                post = state.post;
+              }
 
               return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Icon(Icons.arrow_back),
-                      Text("r/${post.title}"),
-                      const Icon(Icons.more_horiz_rounded),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Icon(Icons.arrow_back),
+                        Text("r/${post.title}"),
+                        const Icon(Icons.more_horiz_rounded),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   FutureBuilder(
@@ -92,19 +110,38 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                           child: Column(
                             children: [
                               const SizedBox(height: 20),
-                              const Icon(Icons.arrow_upward),
+                              VoteButtonWidget(
+                                onTap: () => postCubit.voteUp(post),
+                                child: Icon(
+                                  Icons.arrow_upward,
+                                  color: post.yourVote == 1
+                                      ? Colors.amber
+                                      : Colors.white,
+                                ),
+                              ),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10.0),
                                 child: Text(
                                   (post.voteUpCount - post.voteDownCount)
                                       .toString(),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    color: post.yourVote == 1
+                                        ? Colors.amber
+                                        : Colors.white,
                                   ),
                                 ),
                               ),
-                              const Icon(Icons.arrow_downward),
+                              VoteButtonWidget(
+                                onTap: () => postCubit.voteDown(post),
+                                child: Icon(
+                                  Icons.arrow_downward,
+                                  color: post.yourVote == -1
+                                      ? Colors.blue
+                                      : Colors.white,
+                                ),
+                              ),
                               const SizedBox(height: 30),
                               const Icon(Icons.comment_outlined),
                               Text(post.comments.allCommentsCount.toString()),
@@ -119,7 +156,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: VideoController(
+                    child: VideoControllerWidget(
                       controller: postCubit.controller,
                     ),
                   )
@@ -131,65 +168,6 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
           }),
         ),
       ),
-    );
-  }
-}
-
-class VideoController extends StatefulWidget {
-  final VideoPlayerController controller;
-  const VideoController({super.key, required this.controller});
-
-  @override
-  State<VideoController> createState() => _VideoControllerState();
-}
-
-class _VideoControllerState extends State<VideoController> {
-  bool isPlaying = true;
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(() {
-      if (isPlaying == widget.controller.value.isPlaying) return;
-      if (mounted) {
-        setState(() {
-          isPlaying = widget.controller.value.isPlaying;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: () {
-            if (isPlaying) {
-              widget.controller.pause();
-            } else {
-              widget.controller.play();
-            }
-          },
-          child: isPlaying
-              ? const Icon(Icons.pause)
-              : const Icon(Icons.play_arrow),
-        ),
-        Container(
-          height: 3,
-          width: MediaQuery.of(context).size.width * .8,
-          color: Colors.white,
-        ),
-        GestureDetector(
-          child: const Icon(Icons.volume_off),
-        )
-      ],
     );
   }
 }

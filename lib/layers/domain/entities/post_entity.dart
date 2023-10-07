@@ -1,5 +1,6 @@
-import 'package:equatable/equatable.dart';
 import 'dart:convert';
+
+import 'package:equatable/equatable.dart';
 
 PostEntity postEntityFromJson(String str) =>
     PostEntity.fromJson(json.decode(str));
@@ -15,6 +16,7 @@ class PostEntity extends Equatable {
         description,
         author,
         comments,
+        identityHashCode(this)
       ];
 
   const PostEntity({
@@ -26,7 +28,7 @@ class PostEntity extends Equatable {
     required this.comments,
     required this.videoUrl,
     required this.title,
-    required this.youVoted,
+    required this.yourVote,
   });
 
   final num id;
@@ -36,7 +38,7 @@ class PostEntity extends Equatable {
   final String videoUrl;
   final Author author;
   final Comments comments;
-  final bool? youVoted;
+  final int yourVote;
 
   final String title;
 
@@ -47,7 +49,7 @@ class PostEntity extends Equatable {
         description: json["description"],
         videoUrl: json["videoUrl"],
         title: json["title"],
-        youVoted: json["youVoted"],
+        yourVote: json["yourVote"],
         author: Author.fromJson(json["author"]),
         comments: Comments.fromJson(json["comments"]),
       );
@@ -58,10 +60,35 @@ class PostEntity extends Equatable {
         "voteDownCount": voteDownCount,
         "description": description,
         "videoUrl": videoUrl,
-        "youVoted": youVoted,
+        "title": title,
+        "yourVote": yourVote,
         "author": author.toJson(),
         "comments": comments.toJson(),
       };
+
+  PostEntity copyWith({
+    num? id,
+    num? voteUpCount,
+    num? voteDownCount,
+    String? description,
+    String? videoUrl,
+    Author? author,
+    Comments? comments,
+    int? yourVote,
+    String? title,
+  }) {
+    return PostEntity(
+      id: id ?? this.id,
+      voteUpCount: voteUpCount ?? this.voteUpCount,
+      voteDownCount: voteDownCount ?? this.voteDownCount,
+      description: description ?? this.description,
+      videoUrl: videoUrl ?? this.videoUrl,
+      author: author ?? this.author,
+      comments: comments ?? this.comments,
+      yourVote: yourVote ?? this.yourVote,
+      title: title ?? this.title,
+    );
+  }
 }
 
 class Author {

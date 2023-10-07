@@ -1,4 +1,3 @@
-import 'package:flutter_login/flutter_login.dart';
 import 'package:reddit/layers/domain/entities/post_entity.dart';
 
 import '../../../../commons/network/api_manager/api_manager_response.dart';
@@ -35,7 +34,7 @@ class PostsNetworkDataSource extends APIService<Post, Post, Post, Post, dynamic>
             "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
         voteDownCount: 3,
         voteUpCount: 10,
-        youVoted:null,
+        yourVote:0,
         author: Author(
           id: 1,
           name: "Ali",
